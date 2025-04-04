@@ -1,69 +1,38 @@
-package com.example.todo.ui.addtask
+package com.example.todo.ui.editTask
+
+import com.example.todo.ui.addtask.CategorySelector
+import com.example.todo.ui.addtask.PrioritySelector
 
 import android.os.Build
-import android.widget.DatePicker
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.sharp.Star
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todo.data.Category
 import com.example.todo.data.Priority
 import com.example.todo.data.Task
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(
-    viewModel: AddTaskViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+fun EditTaskScreen(
+    task: Task,
+    viewModel: EditTaskViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     onBackClick: () -> Unit,
     onSaveClick: (Task) -> Unit
 ) {
@@ -73,6 +42,10 @@ fun AddTaskScreen(
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = uiState.dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.initializeWithTask(task)
+    }
 
     if (showDatePicker) {
         DatePickerDialog(
@@ -104,7 +77,7 @@ fun AddTaskScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Новая задача") },
+                title = { Text("Редактировать задачу") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
@@ -114,7 +87,7 @@ fun AddTaskScreen(
                     TextButton(
                         onClick = {
                             onSaveClick(
-                                Task(
+                                task.copy(
                                     name = uiState.taskName,
                                     description = uiState.description,
                                     dueDate = uiState.dueDate,
@@ -122,7 +95,6 @@ fun AddTaskScreen(
                                     category = uiState.category
                                 )
                             )
-                            viewModel.resetState()
                         },
                         enabled = uiState.taskName.isNotBlank()
                     ) { Text("Сохранить") }
@@ -189,76 +161,5 @@ fun AddTaskScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PrioritySelector(
-    selectedPriority: Priority,
-    onPrioritySelected: (Priority) -> Unit
-) {
-    val priorities = Priority.values()
-
-    // Группа кнопок приоритета
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        priorities.forEach { priority ->
-            FilterChip(
-                selected = priority == selectedPriority,
-                onClick = { onPrioritySelected(priority) },
-                label = { Text(priority.displayName) },
-                leadingIcon = if (priority == selectedPriority) {
-                    {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null
-                        )
-                    }
-                } else null
-            )
-        }
-    }
-}
-
-@Composable
-fun CategorySelector(
-    selectedCategory: Category,
-    onCategorySelected: (Category) -> Unit
-) {
-    val categories = Category.values()
-
-    // Группа кнопок категорий
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        categories.forEach { category ->
-            FilterChip(
-                selected = category == selectedCategory,
-                onClick = { onCategorySelected(category) },
-                label = { Text(category.displayName) },
-                leadingIcon = if (category == selectedCategory) {
-                    {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null
-                        )
-                    }
-                } else null
-            )
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun TaskCreationScreenPreview() {
-    MaterialTheme {
-        AddTaskScreen(
-            viewModel = AddTaskViewModel(),
-            onBackClick = {},
-            onSaveClick = {}
-        )
     }
 }
