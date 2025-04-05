@@ -1,5 +1,6 @@
 package com.example.todo.ui.editTask
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import com.example.todo.data.Category
 import com.example.todo.data.Priority
@@ -50,7 +51,7 @@ class EditTaskViewModel : ViewModel() {
 data class EditTaskUiState(
     val taskName: String = "",
     val description: String = "",
-    val dueDate: LocalDate = LocalDate.now(),
+    @SuppressLint("NewApi") val dueDate: LocalDate = LocalDate.now(),
     val priority: Priority = Priority.MEDIUM,
     val category: Category = Category.WORK
 )

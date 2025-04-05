@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.todo.data.Category
 import com.example.todo.data.Priority
 import com.example.todo.data.Task
+import com.example.todo.ui.home.TaskItem
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,38 +64,6 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun TaskItem(task: Task, onTaskClick: (Task) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onTaskClick(task) },
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = task.name, style = MaterialTheme.typography.titleMedium)
-            Text(text = task.description, style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Дедлайн: ${task.dueDate}", style = MaterialTheme.typography.bodySmall)
-            Text(text = "Приоритет: ${task.priority.displayName}", style = MaterialTheme.typography.bodySmall)
-            Text(text = "Категория: ${task.category.displayName}", style = MaterialTheme.typography.bodySmall)
-        }
-    }
-}
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    val sampleTasks = listOf(
-        Task("Купить продукты", "Список: молоко, хлеб, яйца", LocalDate.now(), Priority.MEDIUM, Category.SHOPPING),
-        Task("Сделать отчёт", "Подготовить данные за месяц", LocalDate.now().plusDays(3), Priority.HIGH, Category.WORK),
-        Task("Позвонить другу", "Обсудить планы на выходные", LocalDate.now().plusDays(1), Priority.LOW, Category.PERSONAL)
-    )
-    MaterialTheme {
-        HomeScreen(
-            tasks = sampleTasks,
-            onTaskClick = {},
-            onAddTaskClick = {}
-        )
-    }
-}
+
+

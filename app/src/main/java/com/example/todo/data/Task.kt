@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 
 data class Task(
+    val id: Int = 0,
     val name: String,
     val description: String,
     val dueDate: LocalDate,

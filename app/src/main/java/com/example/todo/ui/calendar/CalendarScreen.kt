@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TaskCalendarScreen(tasks: List<Task>) {
+fun CalendarScreen(tasks: List<Task>) {
     val today = remember { LocalDate.now() }
     val currentMonth = remember { today.withDayOfMonth(1) }
     val daysInMonth = remember { currentMonth.lengthOfMonth() }
@@ -72,19 +72,5 @@ fun TaskCalendarScreen(tasks: List<Task>) {
                 }
             }
         }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun TaskCalendarScreenPreview() {
-    val sampleTasks = listOf(
-        Task("Купить продукты", "", LocalDate.now(), Priority.MEDIUM, Category.SHOPPING),
-        Task("Сделать отчёт", "", LocalDate.now().withDayOfMonth(10), Priority.HIGH, Category.WORK),
-        Task("Позвонить другу", "", LocalDate.now().withDayOfMonth(15), Priority.LOW, Category.PERSONAL)
-    )
-    MaterialTheme {
-        TaskCalendarScreen(tasks = sampleTasks)
     }
 }
