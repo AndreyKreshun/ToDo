@@ -3,6 +3,7 @@ package com.example.todo.ui.navigation
 import HomeScreen
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +32,9 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 },
                 onDeleteTask = { task ->
                     viewModel.deleteTask(task)
+                },
+                onCalendarClick = {
+                    navController.navigate(NavRoutes.CALENDAR) // Переход в календарь
                 }
             )
         }
@@ -65,7 +69,8 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         }
 
         composable(NavRoutes.CALENDAR) {
-            CalendarScreen(tasks = tasks)
+            CalendarScreen(tasks = tasks, navController = navController)
         }
     }
 }
+

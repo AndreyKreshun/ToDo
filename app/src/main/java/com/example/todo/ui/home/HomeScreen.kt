@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -43,7 +44,8 @@ fun HomeScreen(
     tasks: List<Task>,
     onTaskClick: (Task) -> Unit,
     onAddTaskClick: () -> Unit,
-    onDeleteTask: (Task) -> Unit
+    onDeleteTask: (Task) -> Unit,
+    onCalendarClick: () -> Unit
 ) {
     var taskToDelete by remember { mutableStateOf<Task?>(null) }
 
@@ -76,6 +78,9 @@ fun HomeScreen(
                     IconButton(onClick = onAddTaskClick) {
                         Icon(Icons.Default.Add, contentDescription = "Добавить задачу")
                     }
+                    IconButton(onClick = onCalendarClick) {
+                        Icon(Icons.Default.DateRange, contentDescription = "Календарь") // Иконка для перехода в календарь
+                    }
                 }
             )
         }
@@ -91,7 +96,7 @@ fun HomeScreen(
                 TaskItem(
                     task = task,
                     onTaskClick = onTaskClick,
-                    onTaskLongClick = { taskToDelete = it } // Обработка долгого нажатия
+                    onTaskLongClick = { taskToDelete = it }
                 )
             }
         }

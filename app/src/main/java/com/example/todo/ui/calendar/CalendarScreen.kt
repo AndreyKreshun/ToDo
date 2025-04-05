@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.todo.data.Category
 import com.example.todo.data.Priority
 import com.example.todo.data.Task
@@ -33,7 +35,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen(tasks: List<Task>) {
+fun CalendarScreen(tasks: List<Task>, navController: NavController) {
     val today = remember { LocalDate.now() }
     val currentMonth = remember { today.withDayOfMonth(1) }
     val daysInMonth = remember { currentMonth.lengthOfMonth() }
@@ -72,5 +74,11 @@ fun CalendarScreen(tasks: List<Task>) {
                 }
             }
         }
+
+        // Кнопка для возвращения назад
+        TextButton(onClick = { navController.popBackStack() }) {
+            Text("Назад")
+        }
     }
 }
+
