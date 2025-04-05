@@ -28,6 +28,9 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 },
                 onAddTaskClick = {
                     navController.navigate(NavRoutes.ADD_TASK)
+                },
+                onDeleteTask = { task ->
+                    viewModel.deleteTask(task)
                 }
             )
         }

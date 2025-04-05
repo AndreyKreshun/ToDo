@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.todo.data.Task
 import androidx.compose.runtime.State
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.viewModelScope
 
 class MainViewModel : ViewModel() {
     private val _tasks = mutableStateListOf<Task>()
@@ -21,6 +22,11 @@ class MainViewModel : ViewModel() {
             _tasks[index] = updated
         }
     }
+
+    fun deleteTask(task: Task) {
+        _tasks.remove(task)
+    }
+
 
     private fun generateId(): Int = (_tasks.maxOfOrNull { it.id } ?: 0) + 1
 }
