@@ -12,6 +12,8 @@ import androidx.navigation.navArgument
 import com.example.todo.ui.addtask.AddTaskScreen
 import com.example.todo.ui.calendar.CalendarScreen
 import com.example.todo.ui.editTask.EditTaskScreen
+import com.montanainc.simpleloginscreen.screens.LoginScreen
+import com.montanainc.simpleloginscreen.screens.SignupScreen
 
 
 @SuppressLint("NewApi")
@@ -20,7 +22,14 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
     val navController = rememberNavController()
     val tasks = viewModel.tasks
 
-    NavHost(navController = navController, startDestination = NavRoutes.HOME) {
+    NavHost(navController = navController, startDestination = NavRoutes.AUTHORIZATION) {
+        // Authorization screens
+        composable(NavRoutes.AUTHORIZATION) {
+            LoginScreen(navController = navController)
+        }
+        composable(NavRoutes.REGISTRATION) {
+            SignupScreen(navController = navController)
+        }
         composable(NavRoutes.HOME) {
             HomeScreen(
                 tasks = tasks,
