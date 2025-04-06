@@ -3,7 +3,6 @@ package com.example.todo.ui.navigation
 import HomeScreen
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,12 +21,12 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
     val navController = rememberNavController()
     val tasks = viewModel.tasks
 
-    NavHost(navController = navController, startDestination = NavRoutes.AUTHORIZATION) {
+    NavHost(navController = navController, startDestination = NavRoutes.LOGIN) {
         // Authorization screens
-        composable(NavRoutes.AUTHORIZATION) {
+        composable(NavRoutes.LOGIN) {
             LoginScreen(navController = navController)
         }
-        composable(NavRoutes.REGISTRATION) {
+        composable(NavRoutes.SIGNUP) {
             SignupScreen(navController = navController)
         }
         composable(NavRoutes.HOME) {

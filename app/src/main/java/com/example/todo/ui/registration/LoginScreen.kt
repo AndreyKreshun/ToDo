@@ -50,7 +50,7 @@ fun LoginScreen(navController: NavHostController) {
                 action = "Login",
                 navController,
                 onActionClick = {navController.navigate(NavRoutes.HOME) {
-                    popUpTo(NavRoutes.AUTHORIZATION) { inclusive = true }
+                    popUpTo(NavRoutes.LOGIN) { inclusive = true }
                 }
                 }
             )

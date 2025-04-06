@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Visibility
 import androidx.navigation.NavHostController
 import com.example.todo.R
+import com.example.todo.ui.navigation.NavRoutes
 import com.example.todo.ui.theme.AccentColor
 import com.example.todo.ui.theme.BgColor
 import com.example.todo.ui.theme.GrayColor
@@ -351,24 +352,20 @@ fun AccountQueryComponent(
     textClickable: String,
     navController: NavHostController
 ) {
-    val annonatedString = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = TextColor, fontSize = 15.sp)) {
-            append(textQuery)
-        }
-        withStyle(style = SpanStyle(color = Secondary, fontSize = 15.sp)) {
-            pushStringAnnotation(tag = textClickable, annotation = textClickable)
+    val annotatedString = buildAnnotatedString {
+        append(textQuery)
+        withStyle(SpanStyle(color = AccentColor)) {
             append(textClickable)
         }
     }
 
-    ClickableText(text = annonatedString, onClick = {
-        annonatedString.getStringAnnotations(it, it)
-            .firstOrNull()?.also { annonation ->
-                if (annonation.item == "Login") {
-                    navController.navigate("Login")
-                } else if (annonation.item == "Register") {
-                    navController.navigate("Signup")
-                }
+    ClickableText(
+        text = annotatedString,
+        onClick = { offset ->
+            when (textClickable) {
+                "Register" -> navController.navigate(NavRoutes.SIGNUP)
+                "Login" -> navController.navigate(NavRoutes.LOGIN)
             }
-    })
+        }
+    )
 }
