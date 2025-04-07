@@ -1,6 +1,8 @@
 package com.example.todo.ui.navigation
 
 import HomeScreen
+import LoginScreen
+import SignupScreen
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -11,8 +13,7 @@ import androidx.navigation.navArgument
 import com.example.todo.ui.addtask.AddTaskScreen
 import com.example.todo.ui.calendar.CalendarScreen
 import com.example.todo.ui.editTask.EditTaskScreen
-import com.montanainc.simpleloginscreen.screens.LoginScreen
-import com.montanainc.simpleloginscreen.screens.SignupScreen
+
 
 
 @SuppressLint("NewApi")

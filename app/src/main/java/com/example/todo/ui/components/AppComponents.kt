@@ -15,18 +15,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -58,7 +56,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.Visibility
 import androidx.navigation.NavHostController
 import com.example.todo.R
 import com.example.todo.ui.navigation.NavRoutes
@@ -105,24 +102,25 @@ fun HeadingTextComponent(value: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTextFieldComponent(labelValue: String, icon: ImageVector) {
-    var textValue by remember {
-        mutableStateOf("")
-    }
+fun MyTextFieldComponent(
+    labelValue: String,
+    icon: ImageVector,
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String? = null
+) {
     OutlinedTextField(
         label = {
             Text(text = labelValue)
         },
-        value = textValue,
-        onValueChange = {
-            textValue = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = AccentColor,
             focusedLabelColor = AccentColor,
             cursorColor = Primary,
             containerColor = BgColor,
-            focusedLeadingIconColor = AccentColor,
+            focusedLeadingIconColor = AccentColor
         ),
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
@@ -132,34 +130,44 @@ fun MyTextFieldComponent(labelValue: String, icon: ImageVector) {
                 contentDescription = "profile"
             )
         },
-        keyboardOptions = KeyboardOptions.Default
+        keyboardOptions = KeyboardOptions.Default,
+        isError = error != null,
+        supportingText = {
+            if (error != null) {
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector) {
-    var password by remember {
-        mutableStateOf("")
-    }
-
+fun PasswordTextFieldComponent(
+    labelValue: String,
+    icon: ImageVector,
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String? = null
+) {
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
+
     OutlinedTextField(
         label = {
             Text(text = labelValue)
         },
-        value = password,
-        onValueChange = {
-            password = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = AccentColor,
             focusedLabelColor = AccentColor,
             cursorColor = Primary,
             containerColor = BgColor,
-            focusedLeadingIconColor = AccentColor,
+            focusedLeadingIconColor = AccentColor
         ),
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
@@ -180,30 +188,86 @@ fun PasswordTextFieldComponent(labelValue: String, icon: ImageVector) {
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        isError = error != null,
+        supportingText = {
+            if (error != null) {
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        }
     )
 }
 
 @Composable
-fun CheckboxComponent() {
-    var isChecked by remember {
-        mutableStateOf(false)
-    }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(56.dp)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = {
-                isChecked = it
+fun CheckboxComponent(
+    checked: Boolean,
+    onCheckedChange: ((Boolean)) -> Unit,
+    error: String? = null
+) {
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(56.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Checkbox(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = AccentColor,
+                    uncheckedColor = Color.Gray,
+                    checkmarkColor = Color.White
+                )
+            )
+
+            // Заменяем ClickableTextComponent на более простую реализацию
+            val annotatedString = buildAnnotatedString {
+                append("I agree to the ")
+
+                // Делаем "Terms of Service" кликабельным
+                pushStringAnnotation(
+                    tag = "TERMS",
+                    annotation = "https://example.com/terms"
+                )
+                withStyle(style = SpanStyle(color = AccentColor)) {
+                    append("Terms of Service")
+                }
+                pop()
+
+                append(" and ")
+
+                // Делаем "Privacy Policy" кликабельным
+                pushStringAnnotation(
+                    tag = "PRIVACY",
+                    annotation = "https://example.com/privacy"
+                )
+                withStyle(style = SpanStyle(color = AccentColor)) {
+                    append("Privacy Policy")
+                }
+                pop()
             }
-        )
-        ClickableTextComponent()
+
+            Text(
+                text = annotatedString,
+                modifier = Modifier.padding(start = 8.dp),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        // Показываем ошибку, если есть
+        if (error != null) {
+            Text(
+                text = error,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(start = 72.dp, top = (-8).dp)
+            )
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-package com.montanainc.simpleloginscreen.screens
+
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.todo.ui.navigation.NavRoutes
+import com.example.todo.ui.registration.SignupViewModel
 import com.montanainc.simpleloginscreen.components.BottomComponent
 import com.montanainc.simpleloginscreen.components.CheckboxComponent
 import com.montanainc.simpleloginscreen.components.HeadingTextComponent
@@ -25,7 +26,10 @@ import com.montanainc.simpleloginscreen.components.NormalTextComponent
 import com.montanainc.simpleloginscreen.components.PasswordTextFieldComponent
 
 @Composable
-fun SignupScreen(navController: NavHostController) {
+fun SignupScreen(
+    navController: NavHostController,
+    viewModel: SignupViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -33,9 +37,7 @@ fun SignupScreen(navController: NavHostController) {
             .background(Color.White)
             .padding(28.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             NormalTextComponent(value = "Hello there,")
             HeadingTextComponent(value = "Create an Account")
             Spacer(modifier = Modifier.height(25.dp))
@@ -43,36 +45,57 @@ fun SignupScreen(navController: NavHostController) {
             Column {
                 MyTextFieldComponent(
                     labelValue = "First Name",
-                    icon = Icons.Outlined.Person
+                    icon = Icons.Outlined.Person,
+                    value = viewModel.firstName,
+                    onValueChange = viewModel::updateFirstName,
+                    error = viewModel.firstNameError
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 MyTextFieldComponent(
                     labelValue = "Last Name",
-                    icon = Icons.Outlined.Person
+                    icon = Icons.Outlined.Person,
+                    value = viewModel.lastName,
+                    onValueChange = viewModel::updateLastName,
+                    error = viewModel.lastNameError
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 MyTextFieldComponent(
                     labelValue = "Email",
-                    icon = Icons.Outlined.Email
+                    icon = Icons.Outlined.Email,
+                    value = viewModel.email,
+                    onValueChange = viewModel::updateEmail,
+                    error = viewModel.emailError
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 PasswordTextFieldComponent(
                     labelValue = "Password",
-                    icon = Icons.Outlined.Lock
+                    icon = Icons.Outlined.Lock,
+                    value = viewModel.password,
+                    onValueChange = viewModel::updatePassword,
+                    error = viewModel.passwordError
                 )
-                CheckboxComponent()
+                CheckboxComponent(
+                    checked = viewModel.acceptedTerms,
+                    onCheckedChange = { viewModel.toggleTermsAccepted() },
+                    error = viewModel.termsError
+                )
                 BottomComponent(
                     textQuery = "Already have an account? ",
                     textClickable = "Login",
                     action = "Register",
                     navController = navController,
                     onActionClick = {
-                        // Здесь логика регистрации
-                        navController.popBackStack()
-                        // Или после успешной регистрации:
-                        // navController.navigate(NavRoutes.HOME) {
-                        //     popUpTo(NavRoutes.REGISTRATION) { inclusive = true }
-                        // }
+                        viewModel.signUp(
+                            onSuccess = {
+                                navController.navigate(NavRoutes.HOME) {
+                                    popUpTo(NavRoutes.SIGNUP) { inclusive = true }
+                                }
+                            },
+                            onError = { errorMessage ->
+                                // Показать ошибку (можно использовать Snackbar)
+                                println("Registration error: $errorMessage")
+                            }
+                        )
                     }
                 )
             }
