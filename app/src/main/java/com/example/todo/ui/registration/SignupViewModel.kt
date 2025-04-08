@@ -71,7 +71,7 @@ class SignupViewModel : ViewModel() {
     }
 
     // Валидация формы
-    private fun validate(): Boolean {
+    fun validate(): Boolean {
         var isValid = true
 
         if (firstName.isBlank()) {

@@ -265,7 +265,7 @@ fun CheckboxComponent(
             Text(
                 text = error,
                 style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier.padding(start = 72.dp, top = (-8).dp)
+                modifier = Modifier.padding(start = 72.dp, top = 4.dp)
             )
         }
     }
