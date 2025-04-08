@@ -1,4 +1,5 @@
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.todo.ui.navigation.NavRoutes
@@ -28,6 +30,7 @@ fun LoginScreen(
     navController: NavHostController,
     viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    val context = LocalContext.current
     Surface(
         color = Color.White,
         modifier = Modifier
@@ -66,13 +69,14 @@ fun LoginScreen(
                 onActionClick = {
                     viewModel.login(
                         onSuccess = {
+                            Toast.makeText(context, "Авторизация прошла успешно", Toast.LENGTH_SHORT).show()
                             navController.navigate(NavRoutes.HOME) {
                                 popUpTo(NavRoutes.LOGIN) { inclusive = true }
                             }
                         },
                         onError = { errorMessage ->
                             // Показать ошибку (можно использовать Snackbar или Toast)
-                            println("Login error: $errorMessage")
+                            Toast.makeText(context, "Авторизация не прошла неуспешно: $errorMessage", Toast.LENGTH_LONG).show()
                         }
                     )
                 }

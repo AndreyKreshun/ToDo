@@ -5,6 +5,7 @@ import LoginScreen
 import SignupScreen
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,7 +19,7 @@ import com.example.todo.ui.editTask.EditTaskScreen
 
 @SuppressLint("NewApi")
 @Composable
-fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MainScreen(viewModel: MainViewModel = viewModel()) {
     val navController = rememberNavController()
     val tasks = viewModel.tasks
 
@@ -44,6 +45,9 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 },
                 onCalendarClick = {
                     navController.navigate(NavRoutes.CALENDAR) // Переход в календарь
+                },
+                onExitClick = {
+                    navController.navigate(NavRoutes.LOGIN)
                 }
             )
         }
