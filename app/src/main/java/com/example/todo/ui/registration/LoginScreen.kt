@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.todo.ui.navigation.NavRoutes
 import com.example.todo.ui.registration.LoginViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.montanainc.simpleloginscreen.components.BottomComponent
 import com.montanainc.simpleloginscreen.components.HeadingTextComponent
 import com.montanainc.simpleloginscreen.components.MyTextFieldComponent

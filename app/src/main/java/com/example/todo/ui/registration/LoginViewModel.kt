@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     // Состояние для email
     var email by mutableStateOf("")
         private set
@@ -74,22 +76,17 @@ class LoginViewModel : ViewModel() {
     ) {
         if (!validate()) return
 
-        viewModelScope.launch {
-            isLoading = true
-            try {
-                // Здесь должна быть логика аутентификации
-                // Например, вызов repository.login(email, password)
+        isLoading = true
 
-                // Имитация сетевого запроса
-                kotlinx.coroutines.delay(1000)
-
-                // Если успешно
-                onSuccess()
-            } catch (e: Exception) {
-                onError(e.message ?: "Login failed")
-            } finally {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
                 isLoading = false
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onError(task.exception?.message ?: "Login failed")
+                }
             }
-        }
     }
+
 }
