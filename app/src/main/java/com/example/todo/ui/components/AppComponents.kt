@@ -345,61 +345,6 @@ fun BottomComponent(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Разделитель с текстом "Or"
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    thickness = 1.dp,
-                    color = GrayColor
-                )
-                Text(
-                    text = "Or",
-                    modifier = Modifier.padding(10.dp),
-                    fontSize = 20.sp
-                )
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    thickness = 1.dp,
-                    color = GrayColor
-                )
-            }
-
-            // Кнопка Google
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    onClick = { /* TODO: Handle Google sign in */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent
-                    ),
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .border(
-                            width = 2.dp,
-                            color = Color(android.graphics.Color.parseColor("#d2d2d2")),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.google_svg),
-                        contentDescription = "Google Logo",
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
             // Текст с кликабельной ссылкой
             AccountQueryComponent(
                 textQuery = textQuery,
