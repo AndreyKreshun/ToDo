@@ -1,23 +1,23 @@
 package com.example.todo.ui.addtask
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.todo.data.Category
 import com.example.todo.data.Priority
 import com.example.todo.data.Task
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.UUID
 
 class AddTaskViewModel : ViewModel() {
-    // Состояние экрана
     private val _uiState = MutableStateFlow(AddTaskUiState())
     val uiState: StateFlow<AddTaskUiState> = _uiState.asStateFlow()
 
-    // Обработчики событий
+    private val db = FirebaseFirestore.getInstance()
+
     fun onTaskNameChange(newName: String) {
         _uiState.update { it.copy(taskName = newName) }
     }
@@ -38,11 +38,28 @@ class AddTaskViewModel : ViewModel() {
         _uiState.update { it.copy(category = newCategory) }
     }
 
-    // Сброс состояния (например, после сохранения)
     fun resetState() {
         _uiState.value = AddTaskUiState()
     }
+
+    fun saveTaskToFirebase(task: Task, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+        val taskMap = mapOf(
+            "name" to task.name,
+            "description" to task.description,
+            "dueDate" to task.dueDate.toString(),
+            "priority" to task.priority.name,
+            "category" to task.category.name
+        )
+
+        val taskId = UUID.randomUUID().toString()
+        db.collection("tasks")
+            .document(taskId)
+            .set(taskMap)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { exception -> onError(exception) }
+    }
 }
+
 
 // Состояние UI для экрана добавления задачи
 data class AddTaskUiState(

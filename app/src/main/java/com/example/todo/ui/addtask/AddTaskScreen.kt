@@ -1,6 +1,7 @@
 package com.example.todo.ui.addtask
 
 import android.os.Build
+import android.util.Log
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -113,17 +114,27 @@ fun AddTaskScreen(
                 actions = {
                     TextButton(
                         onClick = {
-                            onSaveClick(
-                                Task(
-                                    name = uiState.taskName,
-                                    description = uiState.description,
-                                    dueDate = uiState.dueDate,
-                                    priority = uiState.priority,
-                                    category = uiState.category
-                                )
+                            val task = Task(
+                                name = uiState.taskName,
+                                description = uiState.description,
+                                dueDate = uiState.dueDate,
+                                priority = uiState.priority,
+                                category = uiState.category
                             )
-                            viewModel.resetState()
+
+                            viewModel.saveTaskToFirebase(
+                                task = task,
+                                onSuccess = {
+                                    onSaveClick(task) // например, вернуться назад
+                                    viewModel.resetState()
+                                },
+                                onError = { e ->
+                                    Log.e("Firebase", "Ошибка при сохранении: ${e.message}")
+                                    // Можно добавить Snackbar или Toast
+                                }
+                            )
                         },
+
                         enabled = uiState.taskName.isNotBlank()
                     ) { Text("Сохранить") }
                 }

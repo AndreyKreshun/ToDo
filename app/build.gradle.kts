@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id ("kotlin-parcelize")
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -42,6 +43,10 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.10.0")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")
